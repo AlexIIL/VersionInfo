@@ -46,6 +46,8 @@ public class VersionGenerator {
                 writer.write("\"contributors\":" + contributors + ",");
                 writer.write("\"releases\":" + releases + "");
                 writer.close();
+
+                System.out.println(new File("output.json").getAbsolutePath());
             }
             catch (IOException e) {
                 e.printStackTrace();
