@@ -40,11 +40,10 @@ public class VersionGenerator {
 
             System.out.println(contributors.length() + " contributors, " + commits.length() + " commits, " + releases.length() + " releases.");
 
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(new File("output.json")));
-                writer.write("\"commits\":" + commits + ",");
-                writer.write("\"contributors\":" + contributors + ",");
-                writer.write("\"releases\":" + releases + "");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("output.json")))) {
+                writer.write("\"commits\":" + commits.replace("[", "[\n") + ",\n");
+                writer.write("\"contributors\":" + contributors.replace("[", "[\n") + ",\n");
+                writer.write("\"releases\":" + releases.replace("[", "[\n") + "");
                 writer.close();
 
                 System.out.println(new File("output.json").getAbsolutePath());
