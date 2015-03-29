@@ -2,3 +2,8 @@
 /build/
 /.gradle/
 /.git/
+/.classpath
+/.project
+/.settings
+/output.json
+
