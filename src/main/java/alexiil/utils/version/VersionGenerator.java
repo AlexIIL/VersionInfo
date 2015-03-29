@@ -39,8 +39,9 @@ public class VersionGenerator {
             String releases = GitRequester.getReleases(user, repo);
 
             System.out.println(contributors.length() + " contributors, " + commits.length() + " commits, " + releases.length() + " releases.");
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File("output.json")))) {
+            BufferedWriter writer = null;
+            try {
+                writer = new BufferedWriter(new FileWriter(new File("output.json")));
                 writer.write("\"commits\":" + commits.replace("[", "[\n") + ",\n");
                 writer.write("\"contributors\":" + contributors.replace("[", "[\n") + ",\n");
                 writer.write("\"releases\":" + releases.replace("[", "[\n") + "");
@@ -50,6 +51,12 @@ public class VersionGenerator {
             }
             catch (IOException e) {
                 e.printStackTrace();
+                try {
+                    writer.close();
+                }
+                catch (IOException e1) {
+                    e1.printStackTrace();
+                }
                 throw new Error(e);
             }
         }
