@@ -1,41 +1,56 @@
 package alexiil.utils.version;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class VersionGenerator {
     public static void main(String[] args) {
         GitRequester.accessToken = System.getenv("GITHUB_ACCESS_TOKEN");
-        // if (GitRequester.accessToken == null || GitRequester.accessToken.length() < 9) {
-        // System.out.println("Access Token was not valid!");
-        // }
-        // else {
-        // Fetch the lists
-        List<GitHubUser> contributors = Collections.unmodifiableList(GitRequester.getContributors("AlexIIL", "CivCraft"));
-
-        List<Commit> commits = new ArrayList<Commit>();
-        int pageNo = 1;
-        while (pageNo <= 100) {
-            // Don't fetch more than 10000 commits, thats just silly
-            List<Commit> commitTemp = GitRequester.getCommits("AlexIIL", "CivCraft", pageNo);
-            if (commitTemp.size() == 0)
-                break;
-            commits.addAll(commitTemp);
-            pageNo++;
+        String user = System.getenv("GITHUB_USER");
+        if (user == null)
+            user = "AlexIIL";
+        String repo = System.getenv("GITHUB_REPO");
+        if (repo == null)
+            repo = "CivCraft";
+        if (GitRequester.accessToken == null || GitRequester.accessToken.length() < 9) {
+            System.out.println("Access Token was not valid!");
         }
-        Collections.sort(commits, new Comparator<Commit>() {
-            @Override
-            public int compare(Commit c0, Commit c1) {
-                return c1.commit.committer.date.compareTo(c0.commit.committer.date);
+        else {
+            // Fetch the lists
+            String contributors = GitRequester.getContributors(user, repo);
+
+            String commits = "[";
+            int pageNo = 1;
+            while (pageNo <= 100) {
+                // Don't fetch more than 10000 commits, thats just silly
+                String commitTemp = GitRequester.getCommits(user, repo, pageNo);
+                if (commitTemp.length() < 50)
+                    break;
+                if (commits != null && commits.length() > 50) {
+                    commits = commits.substring(0, commits.length() - 1);
+                    commits += ",";
+                }
+                commits += commitTemp.substring(1);
+                if (commits.length() > commitTemp.length() + 40)
+                    pageNo++;
             }
-        });
-        commits = Collections.unmodifiableList(commits);
+            String releases = GitRequester.getReleases(user, repo);
 
-        List<Release> releases = Collections.unmodifiableList(GitRequester.getReleases("AlexIIL", "CivCraft"));
+            System.out.println(contributors.length() + " contributors, " + commits.length() + " commits, " + releases.length() + " releases.");
 
-        System.out.println(contributors.size() + " contributors, " + commits.size() + " commits, " + releases.size() + ".");
-        // }
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(new File("output.json")));
+                writer.write("\"commits\":" + commits + ",");
+                writer.write("\"contributors\":" + contributors + ",");
+                writer.write("\"releases\":" + releases + "");
+                writer.close();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                throw new Error(e);
+            }
+        }
     }
 }
