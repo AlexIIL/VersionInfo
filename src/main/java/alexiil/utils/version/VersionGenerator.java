@@ -22,7 +22,6 @@ public class VersionGenerator {
             // Don't fetch more than 10000 commits, thats just silly
             String commitTemp = GitHubRequester.getCommits(user, repo, pageNo);
             if (commitTemp.length() < 50) {
-                pageNo++;
                 break;
             }
             if (commits != null && commits.length() > 50) {
@@ -30,8 +29,7 @@ public class VersionGenerator {
                 commits += ",";
             }
             commits += commitTemp.substring(1);
-            if (commits.length() > commitTemp.length() + 40)
-                pageNo++;
+            pageNo++;
         }
         String releases = GitHubRequester.getReleases(user, repo);
 
