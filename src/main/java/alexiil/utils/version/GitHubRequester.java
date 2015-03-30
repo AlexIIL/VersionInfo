@@ -9,7 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 
-public class GitRequester {
+public class GitHubRequester {
     public static String accessToken = null;
 
     public static String getContributors(String user, String repo) {

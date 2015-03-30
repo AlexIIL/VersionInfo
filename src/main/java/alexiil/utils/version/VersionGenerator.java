@@ -14,13 +14,13 @@ public class VersionGenerator {
         if (repo == null)
             repo = "CivCraft";
         // Fetch the lists
-        String contributors = GitRequester.getContributors(user, repo);
+        String contributors = GitHubRequester.getContributors(user, repo);
 
         String commits = "[";
         int pageNo = 1;
         while (pageNo <= 100) {
             // Don't fetch more than 10000 commits, thats just silly
-            String commitTemp = GitRequester.getCommits(user, repo, pageNo);
+            String commitTemp = GitHubRequester.getCommits(user, repo, pageNo);
             if (commitTemp.length() < 50)
                 break;
             if (commits != null && commits.length() > 50) {
@@ -31,7 +31,7 @@ public class VersionGenerator {
             if (commits.length() > commitTemp.length() + 40)
                 pageNo++;
         }
-        String releases = GitRequester.getReleases(user, repo);
+        String releases = GitHubRequester.getReleases(user, repo);
 
         System.out.println(contributors.length() + " contributors, " + commits.length() + " commits, " + releases.length() + " releases.");
 
