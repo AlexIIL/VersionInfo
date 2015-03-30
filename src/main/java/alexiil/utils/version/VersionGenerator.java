@@ -34,15 +34,20 @@ public class VersionGenerator {
         String releases = GitRequester.getReleases(user, repo);
 
         System.out.println(contributors.length() + " contributors, " + commits.length() + " commits, " + releases.length() + " releases.");
+
+        new File("version").mkdir();
+
+        writeFile("version/commits.json", commits);
+        writeFile("version/contributors.json", contributors);
+        writeFile("version/releases.json", releases);
+    }
+
+    private static void writeFile(String name, String contents) {
         BufferedWriter writer = null;
         try {
-            writer = new BufferedWriter(new FileWriter(new File("output.json")));
-            writer.write("\"commits\":" + commits.replace("[", "[\n") + ",\n");
-            writer.write("\"contributors\":" + contributors.replace("[", "[\n") + ",\n");
-            writer.write("\"releases\":" + releases.replace("[", "[\n") + "");
+            writer = new BufferedWriter(new FileWriter(new File(name)));
+            writer.write(contents);
             writer.close();
-
-            System.out.println(new File("output.json").getAbsolutePath());
         }
         catch (IOException e) {
             e.printStackTrace();
