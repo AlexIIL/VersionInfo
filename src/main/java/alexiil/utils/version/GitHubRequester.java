@@ -17,7 +17,7 @@ public class GitHubRequester {
     }
 
     public static String getCommits(String user, String repo, int pageNo) {
-        return getResponse("repos/" + user + "/" + repo + "/commits?page=" + pageNo + "&per_page=100");
+        return getResponse("repos/" + user + "/" + repo + "/commits?page=" + pageNo + "&per_page=3");
     }
 
     public static String getReleases(String user, String repo) {

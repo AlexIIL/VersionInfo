@@ -21,8 +21,10 @@ public class VersionGenerator {
         while (pageNo <= 100) {
             // Don't fetch more than 10000 commits, thats just silly
             String commitTemp = GitHubRequester.getCommits(user, repo, pageNo);
-            if (commitTemp.length() < 50)
+            if (commitTemp.length() < 50) {
+                pageNo++;
                 break;
+            }
             if (commits != null && commits.length() > 50) {
                 commits = commits.substring(0, commits.length() - 1);
                 commits += ",";
@@ -37,9 +39,9 @@ public class VersionGenerator {
 
         new File("version").mkdir();
 
-        writeFile("version/commits.json", commits);
-        writeFile("version/contributors.json", contributors);
-        writeFile("version/releases.json", releases);
+        writeFile("version/commits.json", commits.replace("\n", ""));
+        writeFile("version/contributors.json", contributors.replace("\n", ""));
+        writeFile("version/releases.json", releases.replace("\n", ""));
     }
 
     private static void writeFile(String name, String contents) {
