@@ -45,9 +45,12 @@ public class VersionGenerator {
     private static void writeFile(String name, String contents) {
         BufferedWriter writer = null;
         try {
-            writer = new BufferedWriter(new FileWriter(new File(name)));
+            File file = new File(name);
+            writer = new BufferedWriter(new FileWriter(file));
             writer.write(contents);
             writer.close();
+
+            System.out.println(file.getAbsolutePath());
         }
         catch (IOException e) {
             e.printStackTrace();
