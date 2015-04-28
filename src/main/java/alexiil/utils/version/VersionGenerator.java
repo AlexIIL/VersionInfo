@@ -7,10 +7,10 @@ import java.io.IOException;
 
 public class VersionGenerator {
     public static void main(String[] args) {
-        String user = System.getenv("GITHUB_USER");
+        String user = args[0];
         if (user == null)
             user = "AlexIIL";
-        String repo = System.getenv("GITHUB_REPO");
+        String repo = args[1];
         if (repo == null)
             repo = "CivCraft";
         // Fetch the lists
