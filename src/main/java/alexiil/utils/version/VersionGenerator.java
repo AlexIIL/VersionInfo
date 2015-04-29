@@ -7,12 +7,18 @@ import java.io.IOException;
 
 public class VersionGenerator {
     public static void main(String[] args) {
+        if (args.length != 2) {
+            throw new Error("Was not given any arguments!" + " There must be three, in the form <USER> <REPOSITORY>");
+        }
         String user = args[0];
-        if (user == null)
-            user = "AlexIIL";
+        if (user == null) {
+            throw new Error("Could not get user from arguments!");
+        }
         String repo = args[1];
-        if (repo == null)
-            repo = "CivCraft";
+        if (repo == null) {
+            throw new Error("Could not get repo from arguments!");
+        }
+
         // Fetch the lists
         String contributors = GitHubRequester.getContributors(user, repo);
 
